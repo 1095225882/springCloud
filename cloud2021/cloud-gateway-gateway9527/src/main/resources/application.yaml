@@ -1,0 +1,24 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: payment_routh #payment_route 唯一命名
+          # uri: http://localhost:8001
+          uri: lb://CLOUD-PROVIDER-PAYMENT #使用eureka负载均衡
+          predicates:
+            - Path=/payment/** # 断言，只有相匹配的路径才进行路由，可以配置多个
+
+eureka:
+  client:
+    register-with-eureka: true #表示是否将自己注册到EurekaServer
+    fetchRegistry: true #是否从EurekaServer抓去己有的注册信息，默认为true。但节点无所谓，集群必须设置为true才能配合ribbon使用负载均衡
+    service-url:
+      #defaultZone: http://localhost:7001/eureka
+      defaultZone: http://eureka7001.com:7001/eureka
+  instance:
+    hostname: cloud-gateway-service
